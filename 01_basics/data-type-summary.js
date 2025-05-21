@@ -92,3 +92,34 @@ console.log(typeof anotherId);
 | Examples        | `number`, `string`, etc. | `object`, `array`, `function` |
 
 */
+
+//stack memory location in for primitive data types 
+/*
+let a = 5;
+let b = a;
+ b = 6;
+
+ console.log(b); output-6
+ console.log(a); output-5
+
+ here what happening is that when we alocate b=a then in stack memory stack just copy value of a put assign to b thats why when we channge the value of b is change the copy value not original value that is in a
+
+*/
+
+//Heap memory location is for non primitive data types
+
+/*
+let a = {
+name:"Vikrant",
+age:24
+};
+
+let b  = a;
+
+b.age = 20;
+
+console.log(a.age); output - 20
+console.log(b.age); output - 20
+
+here what happens with Heap memory alocation is that when we assign b=a than because of non primitive data type of object it assign original i mean reference to original object not copy value that's why when we change the data inside object b it also changes in original a object 
+*/
