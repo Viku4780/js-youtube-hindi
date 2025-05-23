@@ -64,7 +64,7 @@ const course = {
 
 // course.courseInstructor
 
-const {courseInstructor: instructor} = course
+const {courseInstructor: instructor} = course  // at the time of destructuring in object i mean giving value we can change the variable name just like this is here are we change courseInstructor to instructor
 
 // console.log(courseInstructor);
 // console.log(instructor);
