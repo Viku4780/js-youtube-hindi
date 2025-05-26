@@ -22,5 +22,96 @@
     div.appendChild(addText)
 
     document.body.appendChild(div)
+
+    /*
+    1. Using .innerHTML
+
+        Serialization & parsing-
+
+        When you set el.innerHTML = "<span>Foo</span>Bar" the browser:
+        
+        Takes the string "<span>Foo</span>Bar".
+        
+        Parses it as HTML text.
+        
+        Builds a brand‑new subtree of element/text nodes from scratch.
+        
+        Old subtree removal-
+        
+        All existing child nodes of el are thrown away in one go.
+        
+        New subtree insertion-
+        
+        The freshly parsed nodes are inserted as el’s children.
+        
+        Reflow/repaint-
+        
+        Might trigger style recomputation and layout, since the whole subtree was regenerated
+
+        <div id="box">
+          <p>Old</p>
+        </div>
+        <script>
+          const box = document.getElementById('box');
+          box.innerHTML = '<span>New</span> Text';
+          // box’s children are now: [ <span>New</span>, TextNode(" Text") ]
+
+          Resulting DOM
+          DIV#box
+├─ SPAN
+│   └─ "New"
+└─ #text " Text"
+(the original <p>Old</p> went away entirely)
+
+
+2. Using createTextNode() (or textContent)
+
+Node creation
+
+You explicitly make a single new text node:
+const txt = document.createTextNode("Hello!");
+
+Targeted insertion
+
+You append or insert it into the existing tree:
+el.appendChild(txt);
+// or el.insertBefore(txt, someChild)
+
+Preserves existing subtree
+
+Everything that was already inside el stays in place; you just add one more node.
+
+Minimal reflow
+
+Only the affected portion (where the text node went) may need repainting; no wholesale re‑parse.
+
+<div id="box">
+  <p>Keep me</p>
+</div>
+<script>
+  const box = document.getElementById('box');
+  const newText = document.createTextNode(' + Appended');
+  box.appendChild(newText);
+  // box’s children are now: [ <p>Keep me</p>, #text(" + Appended") ]
+</script>
+
+    Resulting DOM
+
+    DIV#box
+├─ P
+│   └─ "Keep me"
+└─ #text " + Appended"
+
+
+    | Aspect                 | `.innerHTML = ...`                                       | `createTextNode()` / `textContent`                  |
+| ---------------------- | -------------------------------------------------------- | --------------------------------------------------- |
+| **Extent of change**   | Drops *all* old children, rebuilds entire subtree        | Adds/modifies only the specific text node(s) needed |
+| **HTML parsing**       | Yes—string is parsed as HTML, so tags become elements    | No—text is treated literally (no tags interpreted)  |
+| **Performance**        | Can be heavy for large subtrees (full re‑parse + reflow) | Lightweight, minimal reflow                         |
+| **Security**           | Risky if untrusted HTML is injected (XSS)                | Safe—text-only, no HTML interpretation              |
+| **DOM tree structure** | Completely new nodes each time                           | Original nodes remain; only new text nodes appended |
+
+       
+    */
 </script>
 </html>
