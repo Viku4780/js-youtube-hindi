@@ -28,4 +28,43 @@
         </ul>
     </div>
 </body>
+    <script>
+        /*
+        innerHTML
+
+What it returns/sets: The raw HTML markup inside an element.
+
+Use‑case: When you want to read or overwrite an element’s HTML structure (tags + content).
+
+Caveat: Setting it reparses and serializes HTML, which can be a security risk (XSS) if you inject untrusted strings.
+
+innerText
+
+What it returns/sets: The “rendered” text content of an element, as the user sees it in the browser.
+
+Use‑case: When you need the text that’s actually visible, with CSS applied (e.g. hidden text isn’t returned).
+
+Behavior:
+
+Collapses and normalizes whitespace (just like in the viewport).
+
+Triggers a reflow to compute styles, so it’s slower than textContent.
+
+Ignores <script> and <style> content.
+
+textContent
+
+What it returns/sets: The full text inside an element and all its descendants, exactly as it appears in the DOM tree.
+
+Use‑case: When you want a fast, straightforward way to get/set all text—regardless of styling or visibility.
+
+Behavior:
+
+Preserves all whitespace and text nodes, even if hidden with CSS.
+
+Does not parse HTML—treats any markup as plain text.
+
+Very fast, since it doesn’t trigger reflows.
+        */
+    </script>
 </html>
