@@ -35,5 +35,97 @@
     // console.log(dayOne.nextElementSibling);
 
     console.log("NODES: ", parent.childNodes);
+
+    
+    /*
+    1. HTMLCollection
+What it is
+A live collection of DOM <element> nodes—always reflects the current document structure.
+
+How you get one
+
+document.getElementsByTagName("div")
+
+document.getElementsByClassName("foo")
+
+element.children
+
+Characteristics
+
+Live: If you add/remove matching elements in the DOM, the collection updates automatically.
+
+Element‑only: Only includes element nodes (no text nodes, comments, etc.).
+
+Indexed + named: You can access by numeric index or by matching id/name attribute:
+
+const coll = document.getElementsByTagName("p");
+coll[0];              // first <p>
+coll["myParaId"];     // <p id="myParaId">
+
+2. NodeList
+What it is
+A collection of nodes (elements, text, comments, etc.). Can be live or static, depending on how it was created.
+
+How you get one
+
+Static: document.querySelectorAll(".foo")
+
+Live: some older APIs (e.g. Node.childNodes is live)
+
+Characteristics
+
+May be live or static:
+
+querySelectorAll → static snapshot.
+
+childNodes → live (updates with DOM changes).
+
+Node‑type aware: Includes text nodes, comments, elements, etc.
+
+Iterable: You can use for…of, spread ([...]), .forEach() (in modern browsers).
+
+3. Array
+What it is
+A plain JavaScript array—static, general-purpose container of any values.
+
+How you get one
+
+Literals: []
+
+From collections:
+
+const arr1 = Array.from(document.getElementsByClassName("foo")); 
+const arr2 = [...document.querySelectorAll("p")];
+
+Characteristics
+
+Static: Doesn’t auto‑update if the DOM changes.
+
+Rich API: Full suite of array methods (map, filter, reduce, etc.).
+
+Can hold anything: Elements, primitives, objects, mixed types.
+
+| Feature           | HTMLCollection                      | NodeList                      | Array                            |
+| ----------------- | ----------------------------------- | ----------------------------- | -------------------------------- |
+| **Live-updating** | Yes                                 | Sometimes (API-dependent)     | No                               |
+| **Node types**    | Element nodes only                  | Elements + text/comments      | Any JavaScript value             |
+| **Iterable**      | Not directly (use `for` or convert) | Yes (`for…of`, `.forEach`)    | Yes (`for…of`, `.forEach`, etc.) |
+| **Array methods** | ❌                                   | Only `.forEach()` (static NL) | ✅ (map, filter, reduce…)         |
+| **Named access**  | ✔️ by `id`/`name`                   | ❌                             | ❌                                |
+
+When to use which
+HTMLCollection:
+When you need a live view of element-only sets (e.g. dynamic galleries, menus).
+
+NodeList:
+
+Use querySelectorAll (static) for one‑off batch queries that won’t change.
+
+Use childNodes (live) only if you really need to track all node changes under a parent.
+
+Array:
+When you need full array functionality (filtering, mapping, slicing, etc.) or want a snapshot that won’t mutate.
+
+    */
 </script>
 </html>
