@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: #212121;">
+    0	UNSENT	Client has been created. open() not called yet.
+1	OPENED	open() has been called.
+2	HEADERS_RECEIVED	send() has been called, and headers and status are available.
+3	LOADING	Downloading; responseText holds partial data.
+4	DONE	The operation is complete.
+</body>
+<script>
+    const requestUrl = 'https://api.github.com/users/hiteshchoudhary'
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', requestUrl)
+    xhr.onreadystatechange = function(){
+        console.log(xhr.readyState);
+        if (xhr.readyState === 4) {
+            const data = JSON.parse(this.responseText)
+            console.log(typeof data);
+            console.log(data.followers);
+        }
+    }
+    xhr.send();
+
+    /*
+    1. APIs (Application Programming Interfaces)
+1.1. What an API Really Is
+Analogy: An API is like a restaurant menu – it lists what the kitchen will give you, and how to order it.
+
+In code: It’s a contract that one piece of software offers to another:
+
+Signature: What you call it (endpoint, method)
+
+Inputs: What parameters or body you send
+
+Outputs: What data comes back
+
+Errors: What happens if something goes wrong
+
+1.2. API Styles & Protocols
+| Style         | Protocol          | Key Traits                                                              |
+| ------------- | ----------------- | ----------------------------------------------------------------------- |
+| **REST**      | HTTP/HTTPS        | Resources identified by URLs, CRUD via GET/POST/PUT/DELETE, stateless.  |
+| **SOAP**      | XML over HTTP     | Strict XML envelope, WSDL contract, built‑in error handling & security. |
+| **GraphQL**   | HTTP + JSON       | Single endpoint, client declares exactly which fields it wants.         |
+| **gRPC**      | HTTP/2 + ProtoBuf | Binary format, bi‑directional streaming, high performance.              |
+| **WebSocket** | ws/wss            | Persistent, full‑duplex TCP socket for real‑time data.                  |
+
+1.3. Core Concepts
+Endpoints & Methods
+
+GET /users: fetch list
+
+POST /users: create new
+
+PUT /users/123: update user 123
+
+DELETE /users/123: delete user 123
+
+Status Codes
+
+2xx = Success (200 OK, 201 Created)
+
+4xx = Client error (400 Bad Request, 401 Unauthorized)
+
+5xx = Server error (500 Internal Server Error)
+
+Authentication & Security
+
+API keys in headers or query string
+
+OAuth 2.0 flows (Authorization Code, Client Credentials)
+
+JWT tokens for stateless auth
+
+Versioning & Rate‑Limiting
+
+/v1/users → /v2/users to avoid breaking clients
+
+Reject after N requests per minute (HTTP 429 Too Many Requests)
+
+Documentation & Testing
+
+OpenAPI/Swagger spec to auto‑generate docs
+
+Mock servers and Postman collections
+
+
+2. AJAX, XML, HTTPS
+2.1. The Legacy: XMLHttpRequest
+
+const xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://api.example.com/items', true);  // async = true
+xhr.onreadystatechange = () => {
+  if (xhr.readyState === 4) {        // 4 = DONE
+    if (xhr.status >= 200 && xhr.status < 300) {
+      const data = JSON.parse(xhr.responseText);
+      console.log(data);
+    } else {
+      console.error('Error', xhr.status);
+    }
+  }
+};
+xhr.send();
+
+readyState: 0 UNSENT → 1 OPENED → 2 HEADERS_RECEIVED → 3 LOADING → 4 DONE
+
+Events you can listen to: load, error, progress, abort
+
+
+2.2. Modern Fetch API
+fetch('/items')
+  .then(res => {
+    if (!res.ok) throw new Error(res.statusText);
+    return res.json();                // parse JSON body
+  })
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+
+  Returns a Promise
+
+Streams response: you can read chunks as they arrive
+
+Cleaner than XHR, built‑in JSON and text parsers
+
+
+2.3. HTTPS & TLS Handshake
+DNS lookup of api.example.com → IP address
+
+TCP 3‑way handshake (SYN, SYN‑ACK, ACK) to open a socket
+
+TLS handshake:
+
+Client “Hello” + supported cipher suites
+
+Server “Hello” + chosen cipher + server certificate
+
+Client verifies cert, sends pre‑master secret encrypted with server’s public key
+
+Both sides derive symmetric keys for encryption
+
+HTTP request now inside an encrypted channel
+
+Server responds, then SSL record closes or stays open for keep‑alive
+
+
+3. V8 JavaScript Engine
+3.1. From JS Text to Machine Code
+Parsing
+
+Your .js file → Lexer splits into tokens → Parser builds an AST (Abstract Syntax Tree).
+
+Ignition Interpreter
+
+AST → bytecode (low‑level instructions, one per node).
+
+Runs quickly on first load with minimal overhead.
+
+TurboFan JIT Compiler
+
+Monitors “hot” functions (called often)
+
+Generates optimized machine code for those paths
+
+Inlines functions, unboxes numbers, optimizes loops
+
+De‑optimization
+
+If assumptions break (e.g. type changes), V8 can “deopt” back to bytecode + recompile.
+
+3.2. Memory & Garbage Collection
+New Space (young objects) → Scavenger (semi‑space copying GC)
+
+Old Space (long‑lived) → Mark‑Sweep & Mark‑Compact GC
+
+Large Object Space for very big allocations
+
+3.3. Event Loop & Tasks
+V8 executes JS on a single thread.
+
+Call Stack: tracks your function calls.
+
+Web APIs (in browser) or C++ APIs (in Node) handle timers, I/O.
+
+Microtask Queue: Promises .then callbacks run here (higher priority).
+
+Callback Queue: setTimeout, DOM events wait here until stack empty and microtasks done.
+
+┌─────────────────────────────────┐
+│ Call stack (JS functions run)  │
+└─────────────────────────────────┘
+           ↕
+┌─────────────────────────────────┐
+│ Microtask queue (Promises)     │
+└─────────────────────────────────┘
+           ↕
+┌─────────────────────────────────┐
+│ Callback queue (setTimeout, ...│
+└─────────────────────────────────┘
+
+
+
+4. console.log() & DevTools
+4.1. How console.log() Works Internally
+JS Call: You write console.log(obj) in JS.
+
+V8 Binding: V8 has a built‑in C++ “Console” object bound to the global console.
+
+Message Formatting: The C++ code serializes primitives or holds references for objects.
+
+Transport via CDP: Chrome’s DevTools Protocol (a JSON‑over‑WebSocket API) sends the “log” message from the renderer process.
+
+UI Display: DevTools front‑end receives it, formats it into your Console panel.
+
+4.2. DevTools Architecture
+Browser Process
+
+Manages windows, menus, UI.
+
+Renderer Process
+
+Runs web pages + V8.
+
+Talks to DevTools front‑end via CDP.
+
+DevTools Front‑end (invisible to page)
+
+Written in HTML/CSS/JS.
+
+Renders panels: Elements, Console, Network, Sources, Performance, etc.
+
+Sends commands (e.g. “set breakpoint”) back over CDP.
+
+4.3. Powerful DevTools Features
+Breakpoints & Stepping: Pause JS, inspect call stack, change variables.
+
+Network Panel: See each AJAX/fetch request, timing breakdown (DNS, TCP, SSL, TTFB).
+
+Performance Profiler: Flame charts of V8 CPU usage, memory heap snapshots.
+
+Snippets & Workspaces: Write and run small JS scripts against pages, map local files to served scripts.
+
+Coverage: Find unused JS and CSS.
+
+
+    */
+</script>
+</html>
